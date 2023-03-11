@@ -8,17 +8,6 @@
 #include <seastar/http/function_handlers.hh>
 #include <seastar/http/handlers.hh>
 #include <seastar/http/httpd.hh>
-#include <seastar/net/inet_address.hh>
-// using namespace seastar::httpd;
-// using namespace httpd;
-
-//     seastar::future<std::unique_ptr<seastar::http::reply>>
-//     hello(std::unique_ptr<seastar::http::request> req,
-//     std::unique_ptr<seastar::http::reply> rep)
-// {
-//     return
-//     seastar::make_ready_future<std::unique_ptr<seastar::http::reply>>(std::move(rep));
-// }
 
 void routes(seastar::httpd::routes &r) {
   seastar::httpd::function_handler *h1 = new seastar::httpd::function_handler(

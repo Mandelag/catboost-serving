@@ -1,4 +1,4 @@
-# How to run
+#How to run
 
 1. Install Ubuntu Jammy (using WSL)
 
@@ -18,7 +18,7 @@ apt list upgrade
 cat <your-windows-root>/.wslconfig
 [wsl2]
 memory=15GB # Limits VM memory in WSL 2 to 128 GB
-# https://clay-atlas.com/us/blog/2021/08/31/windows-en-wsl-2-memory/
+#https:  // clay-atlas.com/us/blog/2021/08/31/windows-en-wsl-2-memory/
 ```
 
 4. clone seastar, follow instruction to build & install
@@ -31,6 +31,19 @@ fs.aio-max-nr = 176416
 6. build 
 
 ```
- g++ -std=c++20 -Wall -O3 hello.cc $(pkg-config --libs --cflags --static seastar) -o hello
+ g++ -std=c++17 -Wall -O3 hello.cc $(pkg-config --libs --cflags --static seastar) -o hello
  ./hello
 ```
+
+
+# Format 
+
+install 
+
+```
+clang-format
+
+# clang-format -style=Google -dump-config > .clang-format
+ ```
+
+Follow [Google](https://google.github.io/styleguide/cppguide.html#Nonstandard_Extensions) c++ style guide.
