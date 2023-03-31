@@ -4,12 +4,17 @@
 #include "utility.h"
 
 
-// FloatFeatures allocates memory for float features
-float* FloatFeatures(size_t float_feature_size, size_t doc_count) {
-    float* features = (float*) malloc(float_feature_size * doc_count * sizeof(float));
-    // printf("%p\n", (void *) &features[0]); // DEBUG
+float* FloatFeatures(size_t float_feature_size) {
+    float* features = (float*) malloc(float_feature_size * sizeof(float));
     return features;
 }
+
+// // FloatFeatures allocates memory for float features
+// float* FloatFeatures(size_t float_feature_size, size_t doc_count) {
+//     float* features = (float*) malloc(float_feature_size * doc_count * sizeof(float));
+//     // printf("%p\n", (void *) &features[0]); // DEBUG
+//     return features;
+// }
 
 // Write to a feature
 void FloatFeaturesWrite(float* features, size_t index, float value) {
@@ -44,8 +49,8 @@ void FloatFeaturesDebug(float* features, size_t float_feature_size, size_t doc_c
     printf("---\n");
 }
 
-char** CategoricalFeatures(size_t categorical_feature_size, size_t doc_count) {
-    char** features = (char**) malloc(categorical_feature_size * doc_count * sizeof(char*));
+char** CategoricalFeatures(size_t categorical_feature_size) {
+    char** features = (char**) malloc(categorical_feature_size * sizeof(char*));
     // printf("%s\n", (void *) &features[0]); // DEBUG
     return features;
 }

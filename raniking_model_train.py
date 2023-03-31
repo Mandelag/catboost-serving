@@ -1,4 +1,7 @@
-from catboost import CatBoost, Pool, CatBoostRanker
+from catboost import CatBoost, Pool
+
+model_name = "ranking-model"
+
 
 # Initialize data
 
@@ -12,7 +15,7 @@ x_train = [["cat1", 1.5, 4, 5, 6],
               ["cat3", 150, 220, 150, 200]]
 
 queries_train = ["a", "a", "a", "a", "a", "b", "b", "b"]
-y_train = [1, 0, 1, 1, 1, 0, 0, 1]
+y_train = [1, 0, 1, 0, 1, 0, 0, 1]
 
 train_pool = Pool(
     data=x_train,
@@ -21,7 +24,7 @@ train_pool = Pool(
     cat_features=[0]
 )
 
-# Initialize CatBoostRanker
+# Initialize Catboost
 model = CatBoost(
     {"iterations": 2000, "verbose": False, "loss_function": 'QueryRMSE'}
 )
@@ -29,21 +32,4 @@ model = CatBoost(
 # Fit model
 model.fit(train_pool)
 
-eval = [
-             ["cat1", 1.5, 4, 5, 6],
-             ["cat2", 9.5, 18, 1, 8],
-             ["cat3", 33, 50, 65, 90],
-        ]
-
-eval_pool = Pool(
-    data = eval,
-    group_id = ["a", "a", "a"],
-    cat_features = [0]
-)
-
-# # # Get predictions
-preds = model.predict(eval_pool, prediction_type="Probability")
-print(preds)
-
-
-model.save_model("model")
+model.save_model(model_name)

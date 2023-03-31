@@ -19,7 +19,7 @@ eval_data = [["a", 2, 4, 6, 8],
              ["b", 1, 4, 50, 60]]
 
 # Get predictions
-preds = model.predict(eval_data)
+preds = model.predict(eval_data, prediction_type="Probability")
 print(preds)
 
 

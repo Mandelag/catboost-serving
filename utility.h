@@ -3,7 +3,7 @@
 #include <utility.h>
 
 // FloatFeatures allocates memory to create a collection of float features (feature for all doc)
-float* FloatFeatures(size_t float_feature_size, size_t doc_count);
+float* FloatFeatures(size_t float_feature_size);
 
 // FreeFloatFeatures deallocates memory for float features
 void FreeFloatFeatures(float* float_features);
@@ -22,7 +22,7 @@ void FloatFeaturesWrite(float* features, size_t index, float value);
 
 
 // CategoricalFeatures allocates memory for categorical features
-char** CategoricalFeatures(size_t categorical_feature_size, size_t doc_count);
+char** CategoricalFeatures(size_t categorical_feature_size);
 
 // FreeCategoricalFeatures deallocates memory for float features
 void FreeCategoricalFeatures(char** categorical_features);
