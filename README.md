@@ -1,5 +1,7 @@
 This is a WIP
 
+Currently only supported for linux distribution.
+
 # Create the model file
 
 ```sh
