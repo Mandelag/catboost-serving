@@ -49,3 +49,8 @@ void FreeResult(double* float_features);
 // GetResult is the getter for individual prediction result
 double GetResult(double* result, size_t index);
 
+// AllocateStringArrayRef to obtain reference to C string array
+char*** AllocateStringArrayRef();
+
+// FreeStringArrayRef free them
+void FreeStringArrayRef(char ***ref);

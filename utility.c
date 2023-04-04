@@ -80,6 +80,16 @@ char*** CategoricalFeaturesCollection(char** features, size_t categorical_featur
     return collection;
 }
 
+char*** AllocateStringArrayRef() {
+    char*** collection = (char***) malloc(1 * sizeof(char**));
+    return collection;
+}
+
+void FreeStringArrayRef(char*** ref) {
+    free(ref);
+}
+
+
 void CategoricalFeaturesDebug(char** features, size_t categorical_feature_size, size_t doc_count) {
     printf("---categorical features---\n");
     for (size_t i = 0; i < doc_count * categorical_feature_size; i++) {

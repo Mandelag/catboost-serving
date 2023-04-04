@@ -22,7 +22,7 @@ import (
 
 func main() {
 	var modelPath string
-	flag.StringVar(&modelPath, "m", "model", "path to model file")
+	flag.StringVar(&modelPath, "m", "ranking-model", "path to model file")
 	flag.Parse()
 
 	ref, err := LoadModel(modelPath)
@@ -38,4 +38,10 @@ func main() {
 		log.Panicln(err)
 	}
 	fmt.Println("Result:", result)
+
+	info, err := ref.Info()
+	if err != nil {
+		log.Panicln(err)
+	}
+	fmt.Printf("Info: %+v\n", info)
 }

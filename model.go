@@ -104,7 +104,59 @@ func (m *modelWrapper) predict(features **C.float, featuresSize int, categorical
 
 // Close release resource(s) used by the model
 func (m *modelWrapper) Close() {
-	C.free(m.modelRef)
+	C.ModelCalcerDelete(m.modelRef)
+}
+
+// GetFeatures get the model's feature column names (if any)
+func (m *modelWrapper) Info() (result ModelInfo, err error) {
+	nFloatFeatures := C.GetFloatFeaturesCount(m.modelRef)
+	nCatFeatures := C.GetCatFeaturesCount(m.modelRef)
+	nTextFeatures := C.GetTextFeaturesCount(m.modelRef)
+	nEmbeddingFeatures := C.GetEmbeddingFeaturesCount(m.modelRef)
+	nTree := C.GetTreeCount(m.modelRef)
+	nDimensions := C.GetDimensionsCount(m.modelRef)
+	nPredictionDimensions := C.GetPredictionDimensionsCount(m.modelRef)
+
+	result = ModelInfo{
+		NFloatFeatures:        int(nFloatFeatures),
+		NCatFeatures:          int(nCatFeatures),
+		NTextFeatures:         int(nTextFeatures),
+		NEmbeddingFeatures:    int(nEmbeddingFeatures),
+		NTree:                 int(nTree),
+		NDimensions:           int(nDimensions),
+		NPredictionDimensions: int(nPredictionDimensions),
+	}
+
+	_resultRef := C.AllocateStringArrayRef()
+	var nFeatures C.ulong
+	ok, err := C.GetModelUsedFeaturesNames(m.modelRef, _resultRef, &nFeatures)
+	if !ok {
+		return result, err
+	}
+
+	result.NFeatures = int(nFeatures)
+
+	// Allocates, copy, free
+
+	features := unsafe.Slice(*_resultRef, int(nFeatures))
+	for i := 0; i < int(nFeatures); i++ {
+		result.Features = append(result.Features, C.GoString(features[i]))
+		C.free(unsafe.Pointer(features[i]))
+	}
+	C.FreeStringArrayRef(_resultRef)
+	return result, nil
+}
+
+type ModelInfo struct {
+	NFloatFeatures        int
+	NCatFeatures          int
+	NTextFeatures         int
+	NEmbeddingFeatures    int
+	NTree                 int
+	NDimensions           int
+	NPredictionDimensions int
+	Features              []string
+	NFeatures             int
 }
 
 func copyFeatures(features []float32, featureSize, docSize int) (featuresRef **C.float, close func(), err error) {
@@ -127,6 +179,7 @@ func copyFeatures(features []float32, featureSize, docSize int) (featuresRef **C
 	return _featuresCollection, close, nil
 }
 
+// todo: more generic (not only categorical features, but allocate char )
 func copyCategoricalFeatures(features []string, featureSize, docSize int) (featuresRef ***C.char, close func(), err error) {
 	if len(features) != featureSize*docSize {
 		return nil, nil, ErrInvalidFeatureSize
