@@ -6,12 +6,12 @@ Currently only supported for linux distribution.
 
 ```sh
 # assuming you have python3 ready with 'pip install catboost'
-python3 save_model.py
+python3 ranking_model_train.py
 ```
 
 Test if the model working
 ```sh
-python3 test_model.py
+python3 ranking_model_test.py
 ```
 
 They're based on example here [here](https://catboost.ai/en/docs/concepts/python-usages-examples#regression)
@@ -24,12 +24,21 @@ They're based on example here [here](https://catboost.ai/en/docs/concepts/python
 go build .
 ```
 
-To run, don't forget to 
+Then run:
 
 ```sh
-export LD_LIBRARY_PATH=<./lib folder in this repo>
-./catboost-serving
+export LD_LIBRARY_PATH=lib
+LD_LIBRARY_PATH=lib ./catboost-serving -m model-ranking
 ```
 
-so the linker know how to get the catboost static library.
+or 
+
+```sh
+export LD_LIBRARY_PATH=lib
+./catboost-serving -m model-ranking
+```
+
+`LD_LIBRARY_PATH` so the linker know how to get the catboost static library.
+
 The official distribution is [here](https://github.com/catboost/catboost/releases/tag/v1.1.1)
+Don't forgeet to verify their checksum!
