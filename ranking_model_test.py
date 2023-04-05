@@ -18,6 +18,7 @@ eval_pool = Pool(
 )
 
 # # # Get predictions
-preds = model.predict(eval_pool, prediction_type="Probability")
+preds = model_from_file.predict(eval_pool, prediction_type="Probability")
 
 print(preds)
+print(model_from_file.feature_names_)
