@@ -4,11 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"testing"
 
-	"github.com/mandelag/catboost-serving/catboost"
+	catboost "github.com/mandelag/catboost-serving"
 )
 
-func main() {
+func Test_Run(t *testing.T) {
 	var modelPath string
 	flag.StringVar(&modelPath, "m", "ranking-model", "path to model file")
 	flag.Parse()
