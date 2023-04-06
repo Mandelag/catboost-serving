@@ -1,4 +1,4 @@
-package main
+package catboost
 
 // #include <utility.h>
 // #include <stdlib.h>
