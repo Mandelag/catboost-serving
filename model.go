@@ -27,12 +27,12 @@ var (
 	ErrInvalidFeatureSize = errors.New("invalid feature size")
 )
 
-type modelWrapper struct {
+type Model struct {
 	modelRef unsafe.Pointer
 }
 
 // LoadModel creates load a catboost model by specifying their path
-func LoadModel(path string) (model *modelWrapper, err error) {
+func LoadModel(path string) (model *Model, err error) {
 	modelRef, err := C.ModelCalcerCreate()
 	if err != nil {
 		return nil, err
@@ -48,13 +48,13 @@ func LoadModel(path string) (model *modelWrapper, err error) {
 		return nil, err
 	}
 
-	return &modelWrapper{
+	return &Model{
 		modelRef: modelRef,
 	}, nil
 }
 
 // SetPredictionType
-func (m *modelWrapper) SetPredictionType(t PredictionType) (err error) {
+func (m *Model) SetPredictionType(t PredictionType) (err error) {
 	ok, err := C.SetPredictionType(m.modelRef, C.enum_EApiPredictionType(t))
 	if !ok {
 		return err
@@ -63,7 +63,7 @@ func (m *modelWrapper) SetPredictionType(t PredictionType) (err error) {
 }
 
 // Predict single document
-func (m *modelWrapper) Predict(features []float32, featuresSize int, categoricalFeatures []string, categoricalFeaturesSize int, docSize int) (prediction []float32, err error) {
+func (m *Model) Predict(features []float32, featuresSize int, categoricalFeatures []string, categoricalFeaturesSize int, docSize int) (prediction []float32, err error) {
 	_features, close1, err := copyFeatures(features, featuresSize, docSize)
 	if err != nil {
 		return prediction, err
@@ -84,7 +84,7 @@ func (m *modelWrapper) Predict(features []float32, featuresSize int, categorical
 	return prediction, nil
 }
 
-func (m *modelWrapper) predict(features **C.float, featuresSize int, categoricalFeatures ***C.char, categoricalFeaturesSize int, docSize int) (result []float32, err error) {
+func (m *Model) predict(features **C.float, featuresSize int, categoricalFeatures ***C.char, categoricalFeaturesSize int, docSize int) (result []float32, err error) {
 	resultSize := C.ulong(docSize) // since not a multi class model
 	_result := C.Result(resultSize)
 	defer C.free(unsafe.Pointer(_result))
@@ -103,12 +103,12 @@ func (m *modelWrapper) predict(features **C.float, featuresSize int, categorical
 }
 
 // Close release resource(s) used by the model
-func (m *modelWrapper) Close() {
+func (m *Model) Close() {
 	C.ModelCalcerDelete(m.modelRef)
 }
 
 // GetFeatures get the model's feature column names (if any)
-func (m *modelWrapper) Info() (result ModelInfo, err error) {
+func (m *Model) Info() (result ModelInfo, err error) {
 	nFloatFeatures := C.GetFloatFeaturesCount(m.modelRef)
 	nCatFeatures := C.GetCatFeaturesCount(m.modelRef)
 	nTextFeatures := C.GetTextFeaturesCount(m.modelRef)
