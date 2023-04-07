@@ -63,7 +63,7 @@ func (m *Model) SetPredictionType(t PredictionType) (err error) {
 }
 
 // Predict single document
-func (m *Model) Predict(features []float32, featuresSize int, categoricalFeatures []string, categoricalFeaturesSize int, docSize int) (prediction []float32, err error) {
+func (m *Model) Predict(features []float32, featuresSize int, categoricalFeatures []string, categoricalFeaturesSize int, docSize int) (prediction []float64, err error) {
 	_features, close1, err := copyFeatures(features, featuresSize, docSize)
 	if err != nil {
 		return prediction, err
@@ -84,7 +84,7 @@ func (m *Model) Predict(features []float32, featuresSize int, categoricalFeature
 	return prediction, nil
 }
 
-func (m *Model) predict(features **C.float, featuresSize int, categoricalFeatures ***C.char, categoricalFeaturesSize int, docSize int) (result []float32, err error) {
+func (m *Model) predict(features **C.float, featuresSize int, categoricalFeatures ***C.char, categoricalFeaturesSize int, docSize int) (result []float64, err error) {
 	resultSize := C.ulong(docSize) // since not a multi class model
 	_result := C.Result(resultSize)
 	defer C.free(unsafe.Pointer(_result))
@@ -94,9 +94,9 @@ func (m *Model) predict(features **C.float, featuresSize int, categoricalFeature
 		return nil, err
 	}
 
-	result = make([]float32, docSize)
+	result = make([]float64, docSize)
 	for i := 0; i < docSize; i++ {
-		result[i] = float32(C.GetResult(_result, C.ulong(i)))
+		result[i] = float64(C.GetResult(_result, C.ulong(i)))
 	}
 
 	return result, nil
